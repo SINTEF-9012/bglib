@@ -1,0 +1,39 @@
+package org.thingml.bgapi;
+
+import java.util.ArrayList;
+
+/**
+ *
+ * @author Franck FLEUREY (SINTEF)
+ */
+public class BGAPIImpl implements BGAPIPacketListener {
+    
+    protected BGAPI bgapi;
+    
+    public BGAPIImpl(BGAPI bgapi) {
+        this.bgapi = bgapi;
+        bgapi.addListener(this);
+    }
+    
+    public ArrayList<BGAPIListener> listeners = new ArrayList<BGAPIListener>();
+     public void addListener(BGAPIListener l) {
+        listeners.add(l);
+    }
+    public void removeListener(BGAPIListener l) {
+        listeners.remove(l);
+    }
+
+    public void packetSent(BGAPIPacket packet) {}
+
+    // General packet handler
+    public void packetReceived(BGAPIPacket packet) {
+/*SWITCH*/
+    }
+    
+/*SWITCHOPS*/
+
+/*RECEIVES*/
+
+/*SENDS*/
+    
+}

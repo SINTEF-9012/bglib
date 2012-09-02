@@ -1,0 +1,79 @@
+/*TYPES*/
+
+
+thing fragment BLED112Msgs {
+    message bled112_connect();
+    message bled112_ready();
+    message bled112_error();
+}
+
+thing fragment BLED112Ports includes BLED112Msgs {
+    provided port bled112 {
+       receives bled112_connect
+       sends bled112_ready, bled112_error
+    }
+}
+
+thing fragment BLED112ClientPorts includes BLED112Msgs {
+    required port bled112 {
+       sends bled112_connect
+       receives bled112_ready, bled112_error
+    }
+}
+
+/*MESSAGES*/
+
+/*LIB_PORTS*/
+
+/*CLIENT_PORTS*/
+
+// Implemnatation of the API
+thing BGLibImpl includes BGLibPorts
+@c_header "
+#include \"cmd_def.h\"
+#include \"BLED112.h\"
+#include <signal.h>
+"
+@c_global "
+struct BGLibImpl_Instance *_bgapi_instance;
+
+void ble_default(const void*v){}
+
+
+void exit_program(int sig) {
+ 	printf(\"Catched signal %d\\n\", sig);
+ 	printf(\"Reseting and closing BLED112 Dongle...\\n\");
+	bled_close();
+	printf(\"Bye.\\n\");
+	exit(0);
+}
+
+"
+{
+    // Fork a thread to process incoming data
+    function start_receiver_process()
+    @fork_linux_thread "true"
+    do
+        '// Open the device
+         _bgapi_instance = _instance;
+        int n = bled_open();
+        if (n < 0) {'
+            bled112!bled112_error()
+            'exit(-1);
+        }
+        // To catch Ctrl-C signal and close the dongle properly
+	    (void) signal(SIGINT, exit_program);
+        // Link bglib to the device
+        bglib_output = bled_send;'
+        bled112!bled112_ready()
+        'bled_process_incoming_messages();'
+    end
+
+
+
+
+/*CALLBACKS*/
+
+/*IMPL_SM*/
+
+}

@@ -1,0 +1,9 @@
+package org.thingml.bgapi;
+/**
+ * @author Franck FLEUREY (SINTEF)
+ */
+public interface BGAPIListener {
+
+    /*METHODS*/
+    
+}
