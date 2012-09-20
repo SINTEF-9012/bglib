@@ -13,7 +13,7 @@
         <groupId>org.thingml</groupId>
         <artifactId>bglib</artifactId>
         <version>1.0.3-SNAPSHOT</version>
-        <relativePath>../bglib/pom.xml</relativePath>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
   <properties>
@@ -24,7 +24,7 @@
   
     <dependency>
       <groupId>org.thingml</groupId>
-      <artifactId>bglib-protocol</artifactId>
+      <artifactId>bglib-protocol-1.0.3-43</artifactId>
       <version>1.0.3-SNAPSHOT</version>
     </dependency>
       

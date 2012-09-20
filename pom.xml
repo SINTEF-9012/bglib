@@ -7,6 +7,26 @@
   <name>BGLib :: Root</name>
   <url>https://github.com/SINTEF-9012/bglib</url>
   
+  <developers>
+    <developer>
+      <name>Franck Fleurey</name>
+      <email>franck.fleurey@sintef.no</email>
+    </developer>
+  </developers>
+  
+  <organization>
+    <name>SINTEF</name>
+    <url>http://www.sintef.no</url>
+  </organization>
+
+  <licenses>
+    <license>
+      <name>LGPL</name>
+      <url>http://www.gnu.org/licenses/lgpl-3.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+  
   <version>1.0.3-SNAPSHOT</version>
   
   <properties>
@@ -16,20 +36,21 @@
   </properties>
   
   <modules>
-        <module>../bglib-protocol</module>
-        <module>../bglib-samples</module>
-        <module>../bglib-gui</module>
+        <module>bglib-protocol-1.0.3-43</module>
+        <module>bglib-samples</module>
+        <module>bglib-gui</module>
   </modules>
   
       <build>
         <plugins>
             <plugin>
+				<inherited>false</inherited>
                 <groupId>com.mycila.maven-license-plugin</groupId>
                 <artifactId>maven-license-plugin</artifactId>
                 <version>1.9.0</version>
                 <configuration>
                     <basedir>${basedir}</basedir>
-                    <header>${basedir}/../HEADER</header>
+                    <header>${basedir}/HEADER</header>
                     <strictCheck>true</strictCheck>
                     <properties>
                         <owner>SINTEF</owner>
@@ -79,6 +100,15 @@
                 </configuration>
             </plugin>
            
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+				  <tagBase>https://svn.apache.org/repos/asf/maven/components/releases</tagBase>
+				</configuration>
+			</plugin>
+		   
         </plugins>
     </build>
     
@@ -119,5 +149,11 @@
         </snapshotRepository>
         
     </distributionManagement>
+	
+	<scm>
+		<connection>scm:git:git@github.com:SINTEF-9012/bglib.git</connection>
+		<url>scm:git:git@github.com:SINTEF-9012/bglib.git</url>
+		<developerConnection>scm:git:git@github.com:SINTEF-9012/bglib.git</developerConnection>
+    </scm>
   
 </project>

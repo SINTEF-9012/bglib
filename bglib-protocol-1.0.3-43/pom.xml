@@ -3,17 +3,17 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>org.thingml</groupId>
-  <artifactId>bglib-protocol</artifactId>
+  <artifactId>bglib-protocol-1.0.3-43</artifactId>
   <version>1.0.3-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>BGLib :: Protocol</name>
+  <name>BGLib :: Protocol 1.0.3-43</name>
 
     <parent>
         <groupId>org.thingml</groupId>
         <artifactId>bglib</artifactId>
         <version>1.0.3-SNAPSHOT</version>
-        <relativePath>../bglib/pom.xml</relativePath>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
   <properties>
