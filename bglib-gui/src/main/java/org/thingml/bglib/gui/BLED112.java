@@ -107,8 +107,8 @@ public class BLED112 {
         
     }
     
-    public static BGAPITransport connectBLED112() {
-        SerialPort port = connectSerial();
+    public static BGAPITransport connectBLED112(String portName) {
+        SerialPort port = connectSerial(portName);
         try {
             return new BGAPITransport(port.getInputStream(), port.getOutputStream());
         } catch (IOException ex) {
@@ -117,10 +117,10 @@ public class BLED112 {
         return null;
     }
     
-    public static SerialPort connectSerial() {
+    public static SerialPort connectSerial(String portName) {
     	try {
     		
-    		String portName = selectSerialPort();
+    		//String portName = selectSerialPort();
     		
             CommPortIdentifier portIdentifier = CommPortIdentifier.getPortIdentifier(portName);
             

@@ -294,7 +294,7 @@ public class BLEExplorerFrame extends javax.swing.JFrame implements BGAPIListene
     private void jButtonBLED112ConnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBLED112ConnActionPerformed
         jButtonBLED112Conn.setEnabled(false);
         jButtonBLED112Disc.setEnabled(false);
-        port  = BLED112.connectSerial();
+        port  = BLED112.connectSerial(BLED112.selectSerialPort());
         if (port != null) {
             try {
                 jTextFieldBLED112.setText("Connected on " + port);
