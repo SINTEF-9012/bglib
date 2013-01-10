@@ -268,7 +268,7 @@ def generateReceiveOperations (out : StringBuilder, root: scala.xml.Elem, before
 
   def main(args : Array[String]) {
     println( "Loading XML..." );
-    val url = getClass.getResource("/bleapi.xml")
+    val url = getClass.getResource("/bleapi1155.xml")
     println( "url = " + url );
     val bleapi = XML.loadFile(url.getFile)
 
