@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.thingml</groupId>
   <artifactId>bglib</artifactId>
@@ -27,7 +26,7 @@
     </license>
   </licenses>
   
-  <version>1.0.3-SNAPSHOT</version>
+  <version>1.1.0</version>
   
   <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -154,6 +153,7 @@
 		<connection>scm:git:git@github.com:SINTEF-9012/bglib.git</connection>
 		<url>scm:git:git@github.com:SINTEF-9012/bglib.git</url>
 		<developerConnection>scm:git:git@github.com:SINTEF-9012/bglib.git</developerConnection>
-    </scm>
+      <tag>bglib-1.1.0</tag>
+  </scm>
   
 </project>
