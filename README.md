@@ -30,3 +30,6 @@ Binary distribution of the latest build are available through a Maven repository
       <artifactId>bglib-protocol</artifactId>
       <version>1.0.3-SNAPSHOT</version>
     </dependency>
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/SINTEF-9012/bglib/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
