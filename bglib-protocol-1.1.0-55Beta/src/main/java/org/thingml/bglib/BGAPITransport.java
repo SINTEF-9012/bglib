@@ -15,6 +15,7 @@
  */
 package org.thingml.bglib;
 
+import java.io.IOError;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -57,10 +58,11 @@ public class BGAPITransport implements Runnable {
     public void sendPacket(BGAPIPacket p) {
         try {
             out.write(p.getPacketBytes());
-            for(BGAPITransportListener l : listeners) l.packetSent(p);
         } catch (IOException ex) {
             Logger.getLogger(BGAPITransport.class.getName()).log(Level.SEVERE, null, ex);
+            throw new IOError(ex);
         }
+        for(BGAPITransportListener l : listeners) l.packetSent(p);
     }
     
     
