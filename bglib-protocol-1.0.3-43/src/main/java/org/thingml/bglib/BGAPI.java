@@ -16,6 +16,8 @@
 package org.thingml.bglib;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  *
@@ -38,8 +40,8 @@ public class BGAPI implements BGAPITransportListener {
         bgapi.stop();
     }
     
-    public ArrayList<BGAPIListener> listeners = new ArrayList<BGAPIListener>();
-     public void addListener(BGAPIListener l) {
+    public List<BGAPIListener> listeners = Collections.synchronizedList(new ArrayList<BGAPIListener>());
+    public void addListener(BGAPIListener l) {
         listeners.add(l);
     }
     public void removeListener(BGAPIListener l) {
@@ -287,27 +289,37 @@ public class BGAPI implements BGAPITransportListener {
 	// Callbacks for class system (index = 0)
 	private void receive_system_reset(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
-		for(BGAPIListener l : listeners) l.receive_system_reset();
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_system_reset();
+		}
 	}
 	private void receive_system_hello(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
-		for(BGAPIListener l : listeners) l.receive_system_hello();
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_system_hello();
+		}
 	}
 	private void receive_system_address_get(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
 		BDAddr address = r.r_bd_addr();
-		for(BGAPIListener l : listeners) l.receive_system_address_get(address);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_system_address_get(address);
+		}
 	}
 	private void receive_system_reg_write(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
 		int result = r.r_uint16();
-		for(BGAPIListener l : listeners) l.receive_system_reg_write(result);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_system_reg_write(result);
+		}
 	}
 	private void receive_system_reg_read(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
 		int address = r.r_uint16();
 		int value = r.r_uint8();
-		for(BGAPIListener l : listeners) l.receive_system_reg_read(address, value);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_system_reg_read(address, value);
+		}
 	}
 	private void receive_system_get_counters(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
@@ -315,18 +327,24 @@ public class BGAPI implements BGAPITransportListener {
 		int txretry = r.r_uint8();
 		int rxok = r.r_uint8();
 		int rxfail = r.r_uint8();
-		for(BGAPIListener l : listeners) l.receive_system_get_counters(txok, txretry, rxok, rxfail);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_system_get_counters(txok, txretry, rxok, rxfail);
+		}
 	}
 	private void receive_system_get_connections(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
 		int maxconn = r.r_uint8();
-		for(BGAPIListener l : listeners) l.receive_system_get_connections(maxconn);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_system_get_connections(maxconn);
+		}
 	}
 	private void receive_system_read_memory(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
 		int address = r.r_uint32();
 		byte[] data = r.r_uint8array();
-		for(BGAPIListener l : listeners) l.receive_system_read_memory(address, data);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_system_read_memory(address, data);
+		}
 	}
 	private void receive_system_get_info(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
@@ -337,25 +355,35 @@ public class BGAPI implements BGAPITransportListener {
 		int ll_version = r.r_uint16();
 		int protocol_version = r.r_uint8();
 		int hw = r.r_uint8();
-		for(BGAPIListener l : listeners) l.receive_system_get_info(major, minor, patch, build, ll_version, protocol_version, hw);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_system_get_info(major, minor, patch, build, ll_version, protocol_version, hw);
+		}
 	}
 	private void receive_system_endpoint_tx(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
-		for(BGAPIListener l : listeners) l.receive_system_endpoint_tx();
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_system_endpoint_tx();
+		}
 	}
 	private void receive_system_whitelist_append(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
 		int result = r.r_uint16();
-		for(BGAPIListener l : listeners) l.receive_system_whitelist_append(result);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_system_whitelist_append(result);
+		}
 	}
 	private void receive_system_whitelist_remove(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
 		int result = r.r_uint16();
-		for(BGAPIListener l : listeners) l.receive_system_whitelist_remove(result);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_system_whitelist_remove(result);
+		}
 	}
 	private void receive_system_whitelist_clear(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
-		for(BGAPIListener l : listeners) l.receive_system_whitelist_clear();
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_system_whitelist_clear();
+		}
 	}
 	private void receive_system_boot(BGAPIPacket __packet) {
 		BGAPIPacketReader r = __packet.getPayloadReader();
@@ -366,69 +394,95 @@ public class BGAPI implements BGAPITransportListener {
 		int ll_version = r.r_uint16();
 		int protocol_version = r.r_uint8();
 		int hw = r.r_uint8();
-		for(BGAPIListener l : listeners) l.receive_system_boot(major, minor, patch, build, ll_version, protocol_version, hw);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_system_boot(major, minor, patch, build, ll_version, protocol_version, hw);
+		}
 	}
 	private void receive_system_debug(BGAPIPacket __packet) {
 		BGAPIPacketReader r = __packet.getPayloadReader();
 		byte[] data = r.r_uint8array();
-		for(BGAPIListener l : listeners) l.receive_system_debug(data);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_system_debug(data);
+		}
 	}
 	private void receive_system_endpoint_rx(BGAPIPacket __packet) {
 		BGAPIPacketReader r = __packet.getPayloadReader();
 		int endpoint = r.r_uint8();
 		byte[] data = r.r_uint8array();
-		for(BGAPIListener l : listeners) l.receive_system_endpoint_rx(endpoint, data);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_system_endpoint_rx(endpoint, data);
+		}
 	}
 
 	// Callbacks for class flash (index = 1)
 	private void receive_flash_ps_defrag(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
-		for(BGAPIListener l : listeners) l.receive_flash_ps_defrag();
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_flash_ps_defrag();
+		}
 	}
 	private void receive_flash_ps_dump(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
-		for(BGAPIListener l : listeners) l.receive_flash_ps_dump();
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_flash_ps_dump();
+		}
 	}
 	private void receive_flash_ps_erase_all(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
-		for(BGAPIListener l : listeners) l.receive_flash_ps_erase_all();
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_flash_ps_erase_all();
+		}
 	}
 	private void receive_flash_ps_save(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
 		int result = r.r_uint16();
-		for(BGAPIListener l : listeners) l.receive_flash_ps_save(result);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_flash_ps_save(result);
+		}
 	}
 	private void receive_flash_ps_load(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
 		int result = r.r_uint16();
 		byte[] value = r.r_uint8array();
-		for(BGAPIListener l : listeners) l.receive_flash_ps_load(result, value);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_flash_ps_load(result, value);
+		}
 	}
 	private void receive_flash_ps_erase(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
-		for(BGAPIListener l : listeners) l.receive_flash_ps_erase();
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_flash_ps_erase();
+		}
 	}
 	private void receive_flash_erase_page(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
 		int result = r.r_uint16();
-		for(BGAPIListener l : listeners) l.receive_flash_erase_page(result);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_flash_erase_page(result);
+		}
 	}
 	private void receive_flash_write_words(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
-		for(BGAPIListener l : listeners) l.receive_flash_write_words();
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_flash_write_words();
+		}
 	}
 	private void receive_flash_ps_key(BGAPIPacket __packet) {
 		BGAPIPacketReader r = __packet.getPayloadReader();
 		int key = r.r_uint16();
 		byte[] value = r.r_uint8array();
-		for(BGAPIListener l : listeners) l.receive_flash_ps_key(key, value);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_flash_ps_key(key, value);
+		}
 	}
 
 	// Callbacks for class attributes (index = 2)
 	private void receive_attributes_write(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
 		int result = r.r_uint16();
-		for(BGAPIListener l : listeners) l.receive_attributes_write(result);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_attributes_write(result);
+		}
 	}
 	private void receive_attributes_read(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
@@ -436,18 +490,24 @@ public class BGAPI implements BGAPITransportListener {
 		int offset = r.r_uint16();
 		int result = r.r_uint16();
 		byte[] value = r.r_uint8array();
-		for(BGAPIListener l : listeners) l.receive_attributes_read(handle, offset, result, value);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_attributes_read(handle, offset, result, value);
+		}
 	}
 	private void receive_attributes_read_type(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
 		int handle = r.r_uint16();
 		int result = r.r_uint16();
 		byte[] value = r.r_uint8array();
-		for(BGAPIListener l : listeners) l.receive_attributes_read_type(handle, result, value);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_attributes_read_type(handle, result, value);
+		}
 	}
 	private void receive_attributes_user_response(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
-		for(BGAPIListener l : listeners) l.receive_attributes_user_response();
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_attributes_user_response();
+		}
 	}
 	private void receive_attributes_value(BGAPIPacket __packet) {
 		BGAPIPacketReader r = __packet.getPayloadReader();
@@ -456,14 +516,18 @@ public class BGAPI implements BGAPITransportListener {
 		int handle = r.r_uint16();
 		int offset = r.r_uint16();
 		byte[] value = r.r_uint8array();
-		for(BGAPIListener l : listeners) l.receive_attributes_value(connection, reason, handle, offset, value);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_attributes_value(connection, reason, handle, offset, value);
+		}
 	}
 	private void receive_attributes_user_request(BGAPIPacket __packet) {
 		BGAPIPacketReader r = __packet.getPayloadReader();
 		int connection = r.r_uint8();
 		int handle = r.r_uint16();
 		int offset = r.r_uint16();
-		for(BGAPIListener l : listeners) l.receive_attributes_user_request(connection, handle, offset);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_attributes_user_request(connection, handle, offset);
+		}
 	}
 
 	// Callbacks for class connection (index = 3)
@@ -471,53 +535,71 @@ public class BGAPI implements BGAPITransportListener {
 		BGAPIPacketReader r = packet.getPayloadReader();
 		int connection = r.r_uint8();
 		int result = r.r_uint16();
-		for(BGAPIListener l : listeners) l.receive_connection_disconnect(connection, result);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_connection_disconnect(connection, result);
+		}
 	}
 	private void receive_connection_get_rssi(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
 		int connection = r.r_uint8();
 		int rssi = r.r_int8();
-		for(BGAPIListener l : listeners) l.receive_connection_get_rssi(connection, rssi);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_connection_get_rssi(connection, rssi);
+		}
 	}
 	private void receive_connection_update(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
 		int connection = r.r_uint8();
 		int result = r.r_uint16();
-		for(BGAPIListener l : listeners) l.receive_connection_update(connection, result);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_connection_update(connection, result);
+		}
 	}
 	private void receive_connection_version_update(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
 		int connection = r.r_uint8();
 		int result = r.r_uint16();
-		for(BGAPIListener l : listeners) l.receive_connection_version_update(connection, result);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_connection_version_update(connection, result);
+		}
 	}
 	private void receive_connection_channel_map_get(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
 		int connection = r.r_uint8();
 		byte[] map = r.r_uint8array();
-		for(BGAPIListener l : listeners) l.receive_connection_channel_map_get(connection, map);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_connection_channel_map_get(connection, map);
+		}
 	}
 	private void receive_connection_channel_map_set(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
 		int connection = r.r_uint8();
 		int result = r.r_uint16();
-		for(BGAPIListener l : listeners) l.receive_connection_channel_map_set(connection, result);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_connection_channel_map_set(connection, result);
+		}
 	}
 	private void receive_connection_features_get(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
 		int connection = r.r_uint8();
 		int result = r.r_uint16();
-		for(BGAPIListener l : listeners) l.receive_connection_features_get(connection, result);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_connection_features_get(connection, result);
+		}
 	}
 	private void receive_connection_get_status(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
 		int connection = r.r_uint8();
-		for(BGAPIListener l : listeners) l.receive_connection_get_status(connection);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_connection_get_status(connection);
+		}
 	}
 	private void receive_connection_raw_tx(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
 		int connection = r.r_uint8();
-		for(BGAPIListener l : listeners) l.receive_connection_raw_tx(connection);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_connection_raw_tx(connection);
+		}
 	}
 	private void receive_connection_status(BGAPIPacket __packet) {
 		BGAPIPacketReader r = __packet.getPayloadReader();
@@ -529,7 +611,9 @@ public class BGAPI implements BGAPITransportListener {
 		int timeout = r.r_uint16();
 		int latency = r.r_uint16();
 		int bonding = r.r_uint8();
-		for(BGAPIListener l : listeners) l.receive_connection_status(connection, flags, address, address_type, conn_interval, timeout, latency, bonding);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_connection_status(connection, flags, address, address_type, conn_interval, timeout, latency, bonding);
+		}
 	}
 	private void receive_connection_version_ind(BGAPIPacket __packet) {
 		BGAPIPacketReader r = __packet.getPayloadReader();
@@ -537,25 +621,33 @@ public class BGAPI implements BGAPITransportListener {
 		int vers_nr = r.r_uint8();
 		int comp_id = r.r_uint16();
 		int sub_vers_nr = r.r_uint16();
-		for(BGAPIListener l : listeners) l.receive_connection_version_ind(connection, vers_nr, comp_id, sub_vers_nr);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_connection_version_ind(connection, vers_nr, comp_id, sub_vers_nr);
+		}
 	}
 	private void receive_connection_feature_ind(BGAPIPacket __packet) {
 		BGAPIPacketReader r = __packet.getPayloadReader();
 		int connection = r.r_uint8();
 		byte[] features = r.r_uint8array();
-		for(BGAPIListener l : listeners) l.receive_connection_feature_ind(connection, features);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_connection_feature_ind(connection, features);
+		}
 	}
 	private void receive_connection_raw_rx(BGAPIPacket __packet) {
 		BGAPIPacketReader r = __packet.getPayloadReader();
 		int connection = r.r_uint8();
 		byte[] data = r.r_uint8array();
-		for(BGAPIListener l : listeners) l.receive_connection_raw_rx(connection, data);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_connection_raw_rx(connection, data);
+		}
 	}
 	private void receive_connection_disconnected(BGAPIPacket __packet) {
 		BGAPIPacketReader r = __packet.getPayloadReader();
 		int connection = r.r_uint8();
 		int reason = r.r_uint16();
-		for(BGAPIListener l : listeners) l.receive_connection_disconnected(connection, reason);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_connection_disconnected(connection, reason);
+		}
 	}
 
 	// Callbacks for class attclient (index = 4)
@@ -563,84 +655,112 @@ public class BGAPI implements BGAPITransportListener {
 		BGAPIPacketReader r = packet.getPayloadReader();
 		int connection = r.r_uint8();
 		int result = r.r_uint16();
-		for(BGAPIListener l : listeners) l.receive_attclient_find_by_type_value(connection, result);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_attclient_find_by_type_value(connection, result);
+		}
 	}
 	private void receive_attclient_read_by_group_type(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
 		int connection = r.r_uint8();
 		int result = r.r_uint16();
-		for(BGAPIListener l : listeners) l.receive_attclient_read_by_group_type(connection, result);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_attclient_read_by_group_type(connection, result);
+		}
 	}
 	private void receive_attclient_read_by_type(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
 		int connection = r.r_uint8();
 		int result = r.r_uint16();
-		for(BGAPIListener l : listeners) l.receive_attclient_read_by_type(connection, result);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_attclient_read_by_type(connection, result);
+		}
 	}
 	private void receive_attclient_find_information(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
 		int connection = r.r_uint8();
 		int result = r.r_uint16();
-		for(BGAPIListener l : listeners) l.receive_attclient_find_information(connection, result);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_attclient_find_information(connection, result);
+		}
 	}
 	private void receive_attclient_read_by_handle(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
 		int connection = r.r_uint8();
 		int result = r.r_uint16();
-		for(BGAPIListener l : listeners) l.receive_attclient_read_by_handle(connection, result);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_attclient_read_by_handle(connection, result);
+		}
 	}
 	private void receive_attclient_attribute_write(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
 		int connection = r.r_uint8();
 		int result = r.r_uint16();
-		for(BGAPIListener l : listeners) l.receive_attclient_attribute_write(connection, result);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_attclient_attribute_write(connection, result);
+		}
 	}
 	private void receive_attclient_write_command(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
 		int connection = r.r_uint8();
 		int result = r.r_uint16();
-		for(BGAPIListener l : listeners) l.receive_attclient_write_command(connection, result);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_attclient_write_command(connection, result);
+		}
 	}
 	private void receive_attclient_reserved(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
-		for(BGAPIListener l : listeners) l.receive_attclient_reserved();
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_attclient_reserved();
+		}
 	}
 	private void receive_attclient_read_long(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
 		int connection = r.r_uint8();
 		int result = r.r_uint16();
-		for(BGAPIListener l : listeners) l.receive_attclient_read_long(connection, result);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_attclient_read_long(connection, result);
+		}
 	}
 	private void receive_attclient_prepare_write(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
 		int connection = r.r_uint8();
 		int result = r.r_uint16();
-		for(BGAPIListener l : listeners) l.receive_attclient_prepare_write(connection, result);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_attclient_prepare_write(connection, result);
+		}
 	}
 	private void receive_attclient_execute_write(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
 		int connection = r.r_uint8();
 		int result = r.r_uint16();
-		for(BGAPIListener l : listeners) l.receive_attclient_execute_write(connection, result);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_attclient_execute_write(connection, result);
+		}
 	}
 	private void receive_attclient_read_multiple(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
 		int connection = r.r_uint8();
 		int result = r.r_uint16();
-		for(BGAPIListener l : listeners) l.receive_attclient_read_multiple(connection, result);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_attclient_read_multiple(connection, result);
+		}
 	}
 	private void receive_attclient_indicated(BGAPIPacket __packet) {
 		BGAPIPacketReader r = __packet.getPayloadReader();
 		int connection = r.r_uint8();
 		int attrhandle = r.r_uint16();
-		for(BGAPIListener l : listeners) l.receive_attclient_indicated(connection, attrhandle);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_attclient_indicated(connection, attrhandle);
+		}
 	}
 	private void receive_attclient_procedure_completed(BGAPIPacket __packet) {
 		BGAPIPacketReader r = __packet.getPayloadReader();
 		int connection = r.r_uint8();
 		int result = r.r_uint16();
 		int chrhandle = r.r_uint16();
-		for(BGAPIListener l : listeners) l.receive_attclient_procedure_completed(connection, result, chrhandle);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_attclient_procedure_completed(connection, result, chrhandle);
+		}
 	}
 	private void receive_attclient_group_found(BGAPIPacket __packet) {
 		BGAPIPacketReader r = __packet.getPayloadReader();
@@ -648,7 +768,9 @@ public class BGAPI implements BGAPITransportListener {
 		int start = r.r_uint16();
 		int end = r.r_uint16();
 		byte[] uuid = r.r_uint8array();
-		for(BGAPIListener l : listeners) l.receive_attclient_group_found(connection, start, end, uuid);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_attclient_group_found(connection, start, end, uuid);
+		}
 	}
 	private void receive_attclient_attribute_found(BGAPIPacket __packet) {
 		BGAPIPacketReader r = __packet.getPayloadReader();
@@ -657,14 +779,18 @@ public class BGAPI implements BGAPITransportListener {
 		int value = r.r_uint16();
 		int properties = r.r_uint8();
 		byte[] uuid = r.r_uint8array();
-		for(BGAPIListener l : listeners) l.receive_attclient_attribute_found(connection, chrdecl, value, properties, uuid);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_attclient_attribute_found(connection, chrdecl, value, properties, uuid);
+		}
 	}
 	private void receive_attclient_find_information_found(BGAPIPacket __packet) {
 		BGAPIPacketReader r = __packet.getPayloadReader();
 		int connection = r.r_uint8();
 		int chrhandle = r.r_uint16();
 		byte[] uuid = r.r_uint8array();
-		for(BGAPIListener l : listeners) l.receive_attclient_find_information_found(connection, chrhandle, uuid);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_attclient_find_information_found(connection, chrhandle, uuid);
+		}
 	}
 	private void receive_attclient_attribute_value(BGAPIPacket __packet) {
 		BGAPIPacketReader r = __packet.getPayloadReader();
@@ -672,13 +798,17 @@ public class BGAPI implements BGAPITransportListener {
 		int atthandle = r.r_uint16();
 		int type = r.r_uint8();
 		byte[] value = r.r_uint8array();
-		for(BGAPIListener l : listeners) l.receive_attclient_attribute_value(connection, atthandle, type, value);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_attclient_attribute_value(connection, atthandle, type, value);
+		}
 	}
 	private void receive_attclient_read_multiple_response(BGAPIPacket __packet) {
 		BGAPIPacketReader r = __packet.getPayloadReader();
 		int connection = r.r_uint8();
 		byte[] handles = r.r_uint8array();
-		for(BGAPIListener l : listeners) l.receive_attclient_read_multiple_response(connection, handles);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_attclient_read_multiple_response(connection, handles);
+		}
 	}
 
 	// Callbacks for class sm (index = 5)
@@ -686,58 +816,80 @@ public class BGAPI implements BGAPITransportListener {
 		BGAPIPacketReader r = packet.getPayloadReader();
 		int handle = r.r_uint8();
 		int result = r.r_uint16();
-		for(BGAPIListener l : listeners) l.receive_sm_encrypt_start(handle, result);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_sm_encrypt_start(handle, result);
+		}
 	}
 	private void receive_sm_set_bondable_mode(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
-		for(BGAPIListener l : listeners) l.receive_sm_set_bondable_mode();
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_sm_set_bondable_mode();
+		}
 	}
 	private void receive_sm_delete_bonding(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
 		int result = r.r_uint16();
-		for(BGAPIListener l : listeners) l.receive_sm_delete_bonding(result);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_sm_delete_bonding(result);
+		}
 	}
 	private void receive_sm_set_parameters(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
-		for(BGAPIListener l : listeners) l.receive_sm_set_parameters();
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_sm_set_parameters();
+		}
 	}
 	private void receive_sm_passkey_entry(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
 		int result = r.r_uint16();
-		for(BGAPIListener l : listeners) l.receive_sm_passkey_entry(result);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_sm_passkey_entry(result);
+		}
 	}
 	private void receive_sm_get_bonds(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
 		int bonds = r.r_uint8();
-		for(BGAPIListener l : listeners) l.receive_sm_get_bonds(bonds);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_sm_get_bonds(bonds);
+		}
 	}
 	private void receive_sm_set_oob_data(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
-		for(BGAPIListener l : listeners) l.receive_sm_set_oob_data();
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_sm_set_oob_data();
+		}
 	}
 	private void receive_sm_smp_data(BGAPIPacket __packet) {
 		BGAPIPacketReader r = __packet.getPayloadReader();
 		int handle = r.r_uint8();
 		int packet = r.r_uint8();
 		byte[] data = r.r_uint8array();
-		for(BGAPIListener l : listeners) l.receive_sm_smp_data(handle, packet, data);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_sm_smp_data(handle, packet, data);
+		}
 	}
 	private void receive_sm_bonding_fail(BGAPIPacket __packet) {
 		BGAPIPacketReader r = __packet.getPayloadReader();
 		int handle = r.r_uint8();
 		int result = r.r_uint16();
-		for(BGAPIListener l : listeners) l.receive_sm_bonding_fail(handle, result);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_sm_bonding_fail(handle, result);
+		}
 	}
 	private void receive_sm_passkey_display(BGAPIPacket __packet) {
 		BGAPIPacketReader r = __packet.getPayloadReader();
 		int handle = r.r_uint8();
 		int passkey = r.r_uint32();
-		for(BGAPIListener l : listeners) l.receive_sm_passkey_display(handle, passkey);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_sm_passkey_display(handle, passkey);
+		}
 	}
 	private void receive_sm_passkey_request(BGAPIPacket __packet) {
 		BGAPIPacketReader r = __packet.getPayloadReader();
 		int handle = r.r_uint8();
-		for(BGAPIListener l : listeners) l.receive_sm_passkey_request(handle);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_sm_passkey_request(handle);
+		}
 	}
 	private void receive_sm_bond_status(BGAPIPacket __packet) {
 		BGAPIPacketReader r = __packet.getPayloadReader();
@@ -745,65 +897,91 @@ public class BGAPI implements BGAPITransportListener {
 		int keysize = r.r_uint8();
 		int mitm = r.r_uint8();
 		int keys = r.r_uint8();
-		for(BGAPIListener l : listeners) l.receive_sm_bond_status(bond, keysize, mitm, keys);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_sm_bond_status(bond, keysize, mitm, keys);
+		}
 	}
 
 	// Callbacks for class gap (index = 6)
 	private void receive_gap_set_privacy_flags(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
-		for(BGAPIListener l : listeners) l.receive_gap_set_privacy_flags();
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_gap_set_privacy_flags();
+		}
 	}
 	private void receive_gap_set_mode(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
 		int result = r.r_uint16();
-		for(BGAPIListener l : listeners) l.receive_gap_set_mode(result);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_gap_set_mode(result);
+		}
 	}
 	private void receive_gap_discover(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
 		int result = r.r_uint16();
-		for(BGAPIListener l : listeners) l.receive_gap_discover(result);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_gap_discover(result);
+		}
 	}
 	private void receive_gap_connect_direct(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
 		int result = r.r_uint16();
 		int connection_handle = r.r_uint8();
-		for(BGAPIListener l : listeners) l.receive_gap_connect_direct(result, connection_handle);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_gap_connect_direct(result, connection_handle);
+		}
 	}
 	private void receive_gap_end_procedure(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
 		int result = r.r_uint16();
-		for(BGAPIListener l : listeners) l.receive_gap_end_procedure(result);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_gap_end_procedure(result);
+		}
 	}
 	private void receive_gap_connect_selective(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
 		int result = r.r_uint16();
 		int connection_handle = r.r_uint8();
-		for(BGAPIListener l : listeners) l.receive_gap_connect_selective(result, connection_handle);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_gap_connect_selective(result, connection_handle);
+		}
 	}
 	private void receive_gap_set_filtering(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
 		int result = r.r_uint16();
-		for(BGAPIListener l : listeners) l.receive_gap_set_filtering(result);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_gap_set_filtering(result);
+		}
 	}
 	private void receive_gap_set_scan_parameters(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
 		int result = r.r_uint16();
-		for(BGAPIListener l : listeners) l.receive_gap_set_scan_parameters(result);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_gap_set_scan_parameters(result);
+			synchronized (listeners) {
+			}
+		}
 	}
 	private void receive_gap_set_adv_parameters(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
 		int result = r.r_uint16();
-		for(BGAPIListener l : listeners) l.receive_gap_set_adv_parameters(result);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_gap_set_adv_parameters(result);
+		}
 	}
 	private void receive_gap_set_adv_data(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
 		int result = r.r_uint16();
-		for(BGAPIListener l : listeners) l.receive_gap_set_adv_data(result);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_gap_set_adv_data(result);
+		}
 	}
 	private void receive_gap_set_directed_connectable_mode(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
 		int result = r.r_uint16();
-		for(BGAPIListener l : listeners) l.receive_gap_set_directed_connectable_mode(result);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_gap_set_directed_connectable_mode(result);
+		}
 	}
 	private void receive_gap_scan_response(BGAPIPacket __packet) {
 		BGAPIPacketReader r = __packet.getPayloadReader();
@@ -813,84 +991,114 @@ public class BGAPI implements BGAPITransportListener {
 		int address_type = r.r_uint8();
 		int bond = r.r_uint8();
 		byte[] data = r.r_uint8array();
-		for(BGAPIListener l : listeners) l.receive_gap_scan_response(rssi, packet_type, sender, address_type, bond, data);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_gap_scan_response(rssi, packet_type, sender, address_type, bond, data);
+		}
 	}
 	private void receive_gap_mode_changed(BGAPIPacket __packet) {
 		BGAPIPacketReader r = __packet.getPayloadReader();
 		int discover = r.r_uint8();
 		int connect = r.r_uint8();
-		for(BGAPIListener l : listeners) l.receive_gap_mode_changed(discover, connect);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_gap_mode_changed(discover, connect);
+		}
 	}
 
 	// Callbacks for class hardware (index = 7)
 	private void receive_hardware_io_port_config_irq(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
 		int result = r.r_uint16();
-		for(BGAPIListener l : listeners) l.receive_hardware_io_port_config_irq(result);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_hardware_io_port_config_irq(result);
+		}
 	}
 	private void receive_hardware_set_soft_timer(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
 		int result = r.r_uint16();
-		for(BGAPIListener l : listeners) l.receive_hardware_set_soft_timer(result);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_hardware_set_soft_timer(result);
+		}
 	}
 	private void receive_hardware_adc_read(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
 		int result = r.r_uint16();
-		for(BGAPIListener l : listeners) l.receive_hardware_adc_read(result);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_hardware_adc_read(result);
+		}
 	}
 	private void receive_hardware_io_port_config_direction(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
 		int result = r.r_uint16();
-		for(BGAPIListener l : listeners) l.receive_hardware_io_port_config_direction(result);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_hardware_io_port_config_direction(result);
+		}
 	}
 	private void receive_hardware_io_port_config_function(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
 		int result = r.r_uint16();
-		for(BGAPIListener l : listeners) l.receive_hardware_io_port_config_function(result);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_hardware_io_port_config_function(result);
+		}
 	}
 	private void receive_hardware_io_port_config_pull(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
 		int result = r.r_uint16();
-		for(BGAPIListener l : listeners) l.receive_hardware_io_port_config_pull(result);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_hardware_io_port_config_pull(result);
+		}
 	}
 	private void receive_hardware_io_port_write(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
 		int result = r.r_uint16();
-		for(BGAPIListener l : listeners) l.receive_hardware_io_port_write(result);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_hardware_io_port_write(result);
+		}
 	}
 	private void receive_hardware_io_port_read(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
 		int result = r.r_uint16();
 		int port = r.r_uint8();
 		int data = r.r_uint8();
-		for(BGAPIListener l : listeners) l.receive_hardware_io_port_read(result, port, data);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_hardware_io_port_read(result, port, data);
+		}
 	}
 	private void receive_hardware_spi_config(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
 		int result = r.r_uint16();
-		for(BGAPIListener l : listeners) l.receive_hardware_spi_config(result);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_hardware_spi_config(result);
+		}
 	}
 	private void receive_hardware_spi_transfer(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
 		int result = r.r_uint16();
 		int channel = r.r_uint8();
 		byte[] data = r.r_uint8array();
-		for(BGAPIListener l : listeners) l.receive_hardware_spi_transfer(result, channel, data);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_hardware_spi_transfer(result, channel, data);
+		}
 	}
 	private void receive_hardware_i2c_read(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
 		int result = r.r_uint16();
 		byte[] data = r.r_uint8array();
-		for(BGAPIListener l : listeners) l.receive_hardware_i2c_read(result, data);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_hardware_i2c_read(result, data);
+		}
 	}
 	private void receive_hardware_i2c_write(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
 		int written = r.r_uint8();
-		for(BGAPIListener l : listeners) l.receive_hardware_i2c_write(written);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_hardware_i2c_write(written);
+		}
 	}
 	private void receive_hardware_set_txpower(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
-		for(BGAPIListener l : listeners) l.receive_hardware_set_txpower();
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_hardware_set_txpower();
+		}
 	}
 	private void receive_hardware_io_port_status(BGAPIPacket __packet) {
 		BGAPIPacketReader r = __packet.getPayloadReader();
@@ -898,42 +1106,58 @@ public class BGAPI implements BGAPITransportListener {
 		int port = r.r_uint8();
 		int irq = r.r_uint8();
 		int state = r.r_uint8();
-		for(BGAPIListener l : listeners) l.receive_hardware_io_port_status(timestamp, port, irq, state);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_hardware_io_port_status(timestamp, port, irq, state);
+		}
 	}
 	private void receive_hardware_soft_timer(BGAPIPacket __packet) {
 		BGAPIPacketReader r = __packet.getPayloadReader();
 		int handle = r.r_uint8();
-		for(BGAPIListener l : listeners) l.receive_hardware_soft_timer(handle);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_hardware_soft_timer(handle);
+		}
 	}
 	private void receive_hardware_adc_result(BGAPIPacket __packet) {
 		BGAPIPacketReader r = __packet.getPayloadReader();
 		int input = r.r_uint8();
 		int value = r.r_int16();
-		for(BGAPIListener l : listeners) l.receive_hardware_adc_result(input, value);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_hardware_adc_result(input, value);
+		}
 	}
 
 	// Callbacks for class test (index = 8)
 	private void receive_test_phy_tx(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
-		for(BGAPIListener l : listeners) l.receive_test_phy_tx();
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_test_phy_tx();
+		}
 	}
 	private void receive_test_phy_rx(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
-		for(BGAPIListener l : listeners) l.receive_test_phy_rx();
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_test_phy_rx();
+		}
 	}
 	private void receive_test_phy_end(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
 		int counter = r.r_uint16();
-		for(BGAPIListener l : listeners) l.receive_test_phy_end(counter);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_test_phy_end(counter);
+		}
 	}
 	private void receive_test_phy_reset(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
-		for(BGAPIListener l : listeners) l.receive_test_phy_reset();
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_test_phy_reset();
+		}
 	}
 	private void receive_test_get_channel_map(BGAPIPacket packet) {
 		BGAPIPacketReader r = packet.getPayloadReader();
 		byte[] channel_map = r.r_uint8array();
-		for(BGAPIListener l : listeners) l.receive_test_get_channel_map(channel_map);
+		synchronized (listeners) {
+			for(BGAPIListener l : listeners) l.receive_test_get_channel_map(channel_map);
+		}
 	}
 
 
