@@ -16,6 +16,7 @@
 package org.thingml.bglib;
 
 import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  *
@@ -30,8 +31,8 @@ public class BGAPI implements BGAPITransportListener {
         bgapi.addListener(this);
     }
     
-    public ArrayList<BGAPIListener> listeners = new ArrayList<BGAPIListener>();
-     public void addListener(BGAPIListener l) {
+    public List<BGAPIListener> listeners = new CopyOnWriteArrayList<BGAPIListener>();
+    public void addListener(BGAPIListener l) {
         listeners.add(l);
     }
     public void removeListener(BGAPIListener l) {
