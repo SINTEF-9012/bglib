@@ -127,7 +127,7 @@
         
         <repository>
             <id>thirdparty</id>
-            <name>thingml-snapshot</name>
+            <name>thirdparty</name>
             <url>http://maven.thingml.org/thirdparty/</url>
         </repository>
         
