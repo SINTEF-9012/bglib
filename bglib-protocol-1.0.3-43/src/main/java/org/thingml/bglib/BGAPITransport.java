@@ -19,7 +19,10 @@ import java.io.IOError;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
+//import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -29,7 +32,8 @@ import java.util.logging.Logger;
  */
 public class BGAPITransport implements Runnable {
     
-    protected ArrayList<BGAPITransportListener> listeners = new ArrayList<BGAPITransportListener>();
+    //protected ArrayList<BGAPITransportListener> listeners = new ArrayList<BGAPITransportListener>();
+    protected List<BGAPITransportListener> listeners = new CopyOnWriteArrayList<BGAPITransportListener>();
     public void addListener(BGAPITransportListener l) {
         listeners.add(l);
     }
@@ -62,7 +66,11 @@ public class BGAPITransport implements Runnable {
             Logger.getLogger(BGAPITransport.class.getName()).log(Level.SEVERE, null, ex);
             throw new IOError(ex);
         }
-        for(BGAPITransportListener l : listeners) l.packetSent(p);
+        Iterator iter = listeners.iterator();
+        while(iter.hasNext()) {
+            ((BGAPITransportListener)(iter.next())).packetSent(p);
+        }
+        //for(BGAPITransportListener l : listeners) l.packetSent(p);
     }
     
     
@@ -110,7 +118,11 @@ public class BGAPITransport implements Runnable {
                                     }
                                     else { // There is no payload
                                             state = WAITING;
-                                            for (BGAPITransportListener l : listeners) l.packetReceived(p);
+                                            Iterator iter = listeners.iterator();
+                                            while(iter.hasNext()) {
+                                                ((BGAPITransportListener)(iter.next())).packetReceived(p);
+                                            }
+                                            //for (BGAPITransportListener l : listeners) l.packetReceived(p);
                                             p = null;
                                     }
                             }
@@ -120,7 +132,11 @@ public class BGAPITransport implements Runnable {
                             idx++;
                             if (idx == p.getPayloadLength()) { // We got a complete message
                                     state = WAITING;
-                                    for (BGAPITransportListener l : listeners) l.packetReceived(p);
+                                    Iterator iter = listeners.iterator();
+                                    while(iter.hasNext()) {
+                                        ((BGAPITransportListener)(iter.next())).packetReceived(p);
+                                    }
+                                    //for (BGAPITransportListener l : listeners) l.packetReceived(p);
                                     p = null;
                             }
                     }
