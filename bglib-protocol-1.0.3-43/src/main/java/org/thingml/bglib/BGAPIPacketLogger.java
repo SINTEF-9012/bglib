@@ -28,12 +28,25 @@ import java.util.logging.Logger;
  */
 public class BGAPIPacketLogger implements BGAPITransportListener {
 
+    private long start;
+    
+    public BGAPIPacketLogger() {
+        start = System.currentTimeMillis();
+    }
+
+    private String time() {
+        int millis_since_start = (int)(System.currentTimeMillis() - start);
+        String ret = String.format("%d.%03d ", millis_since_start / 1000, millis_since_start % 1000);
+        
+        return ret;
+    }
+    
     public void packetSent(BGAPIPacket packet) {
-         Logger.getLogger(BGAPIPacketLogger.class.getName()).log(Level.INFO, "SND " + packet.toString());
+         Logger.getLogger(BGAPIPacketLogger.class.getName()).log(Level.INFO, time() + "SND " + packet.toString());
     }
 
     public void packetReceived(BGAPIPacket packet) {
-        Logger.getLogger(BGAPIPacketLogger.class.getName()).log(Level.INFO, "RCV " + packet.toString());
+        Logger.getLogger(BGAPIPacketLogger.class.getName()).log(Level.INFO, time() + "RCV " + packet.toString());
     }
     
 }
